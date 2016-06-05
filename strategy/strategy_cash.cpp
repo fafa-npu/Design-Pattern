@@ -13,6 +13,7 @@ class Constant {
         const static int TYPE_REBATE = 2;
         const static int TYPE_RETURN = 3;
 
+        //注意： 以下const static double 的定义虽然可以编译通过，但是并不符合C++的标准。
         const static double MONEY_CONDITION = 300;
         const static double MONEY_RETURN = 100;
 
