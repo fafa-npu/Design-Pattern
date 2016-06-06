@@ -28,7 +28,10 @@ class RealSubject : public Subject {
 /* Proxy代理类， 保存一个引用是的代理可以访问实体，并提供一个与Subject的接口相同的接口，这样就可以用代理来代替实体 */
 class Proxy : public Subject {
     public :
-        RealSubject * realSubject;
+        Subject * realSubject;
+        Proxy() {
+            realSubject = NULL;
+        }
         void Request() {
             cout << "This is a proxy request." << endl;
             if (realSubject == NULL) {
