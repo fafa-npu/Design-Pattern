@@ -2,7 +2,7 @@
  * author : zhaohua
  * date : June 14th, 2016
  * discription : 《大话设计模式》，（程杰）。观察者（发布订阅）模式示例.page132
- * warning!!! : 交叉引用！！！编译错误！！！！
+ * warning!!! : 交叉引用！！！！一定要注意交叉引用时类之间的顺序位置以及内联函数的位置。否则极有可能会出现编译器报错的情况。
  * **/
 
 #include <iostream>
@@ -17,25 +17,7 @@ class ConcreteSubject;
 /* 抽象观察者类，为所有的具体观察者定义一个借口，在得到Subject的通知时更新自己 */
 class Observer {
     public :
-            virtual void Update();
-};
-
-/* 具体观察者，实现抽象观察者所要求的更新接口，以便使本身的状态与Subject的状态相协调 */
-class ConcreteObserver : public Observer {
-    private :
-        string name;
-        string observerState;
-        ConcreteSubject * subject;
-    public :
-        ConcreteObserver(ConcreteSubject * pSubject, string pName){
-            this->subject = pSubject;
-            this->name = pName;
-        }
-
-        void Update() {
-            observerState = subject->GetState();
-            cout << "New state of " << name << " is " << observerState << endl;
-        }
+            virtual void Update() {};
 };
 
 /* Subject类，把所有观察者的引用保存在一个聚集里，每个Subject都可以有任何数量的观察者。抽象Subject提供一个借口，可以增加或删除观察者对象。 */
@@ -74,7 +56,34 @@ class ConcreteSubject : public Subject {
         }
 };
 
+/* 具体观察者，实现抽象观察者所要求的更新接口，以便使本身的状态与Subject的状态相协调 */
+class ConcreteObserver : public Observer {
+    private :
+        string name;
+        string observerState;
+        ConcreteSubject * subject;
+    public :
+        ConcreteObserver(ConcreteSubject * pSubject, string pName){
+            this->subject = pSubject;
+            this->name = pName;
+        }
 
+        void Update() {
+            observerState = subject->GetState();
+            cout << "New state of " << name << " is " << observerState << endl;
+        }
+};
+
+int main() {
+    ConcreteSubject * subject = new ConcreteSubject();
+    subject->Attach(new ConcreteObserver(subject, "zhaohua"));
+    subject->Attach(new ConcreteObserver(subject, "lichao"));
+
+    subject->SetState("Doc Yang comes here !!!");
+    subject->Notify();
+
+    return 0;
+}
 
 
 
