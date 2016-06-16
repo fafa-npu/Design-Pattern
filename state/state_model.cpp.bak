@@ -1,0 +1,91 @@
+/**
+ * author : zhaohua
+ * date : June 16th, 2016
+ * discription: 《大话设计模式》，（程杰）。状态模式（state）模型示例。
+ * **/
+
+#include "state_model.h"
+#include <iostream>
+
+using namespace std;
+
+/* 维护一个ConcreteState子类的实例，这个实例定义当前的状态 */
+class Context {
+    private :
+        State * _state;
+    public :
+        Context(State * pState)  {
+            this->_state = pState;
+        }
+        void SetState(State * pState) {
+            this->_state = pState;
+            cout << this->_state->GetName();
+        }
+
+        State * GetState() {
+            return this->_state;
+        }
+
+        void Request() {
+            this->_state->Handle();
+        }
+};
+
+
+/* 抽象状态类，定义一个接口以封装与Context的一个特定状态相关的行为 */
+class State {
+    private :
+        string _name;
+    public :
+        virtual void Handle(Context * context) = 0;
+        void SetName(string pName) {
+            this->_name = pName;
+        }
+
+        string GetName() {
+            return this->_name;
+        }
+};
+
+
+/* 具体状态，每一个子类实现一个与Context的一个状态相关的行为 */
+class ConcreteStateA : public State {
+    public :
+        ConcreteStateA() {
+            this->SetName("StateA");
+        }
+
+        void Handle(Context * context) {
+            free(context->GetState());
+            context->SetState(new ConcreteStateB());
+        }
+};
+
+class ConcreteStateB : public State {
+    public :
+        ConcreteStateB() {
+            this->SetName("StateB");
+        }
+
+        void Handle(Context * context) {
+            free(context->GetState());
+            context->SetState(new ConcreteStateA());
+        }
+};
+
+
+int main() {
+    State * concreteState = new ConcreteStateA();
+    Context * context = new Context(concreteState);
+
+    context->Request();
+    context->Request();
+    context->Request();
+    context->Request();
+
+    free(context);
+    free(concreteState);
+    return 0;
+}
+
+
